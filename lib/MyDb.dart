@@ -18,7 +18,7 @@ class Mydb {
     Database database = await openDatabase(
       path,
       onCreate: _onCreate,
-      version: 3,
+      version: 4,
       onUpgrade: _onUpgrade,
     );
     return database;
@@ -26,9 +26,12 @@ class Mydb {
 
   _onUpgrade(Database ocdb, int oldVersion, int newVersion) async {
     ////////// this function is used to upgrade the database when the version is changed
-    await ocdb.execute(
-      '''ALTER TABEL notes ADD COLUMN content TEXT NOT NULL''',
+    await ocdb.execute('''
+    CREATE TABLE chips (
+      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      namech TEXT NOT NULL
     );
+    ''');
     print("DATABASE UPGRADED^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   }
 
@@ -42,6 +45,16 @@ class Mydb {
 
 ''');
     print("TABLE CREATED^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+    await ocdb.execute('''
+   CREATE TABLE chips (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   namech TEXT NOT NULL,
+   
+);
+
+''');
+    print("TABLE chips CREATED ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   }
 
   /////// select from db
