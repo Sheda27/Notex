@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:notes/controller/controler.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -14,11 +17,11 @@ class Mydb {
 
   initialDB() async {
     String dbpath = await getDatabasesPath();
-    String path = join(dbpath, 'notes.db');
+    String path = join(dbpath, 'notex.db');
     Database database = await openDatabase(
       path,
       onCreate: _onCreate,
-      version: 4,
+      version: 1,
       onUpgrade: _onUpgrade,
     );
     return database;
@@ -26,42 +29,26 @@ class Mydb {
 
   _onUpgrade(Database ocdb, int oldVersion, int newVersion) async {
     ////////// this function is used to upgrade the database when the version is changed
-    await ocdb.execute('''
-    CREATE TABLE chips (
-      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      namech TEXT NOT NULL
-    );
-    ''');
-    print("DATABASE UPGRADED^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   }
 
   _onCreate(Database ocdb, int version) async {
     await ocdb.execute('''
-   CREATE TABLE notes (
+   CREATE TABLE notes_db (
    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-   name TEXT NOT NULL,
+   title TEXT NOT NULL,
    content TEXT NOT NULL
 );
 
 ''');
-    print("TABLE CREATED^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-
-    await ocdb.execute('''
-   CREATE TABLE chips (
-   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-   namech TEXT NOT NULL,
-   
-);
-
-''');
-    print("TABLE chips CREATED ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    log("TABLE CREATED^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   }
 
   /////// select from db
   selectFromDB(String sql) async {
     Database? ocdb = await database;
-    List<Map> result = await ocdb!.rawQuery(sql);
-    return result;
+    List<Map<String, dynamic>> result = await ocdb!.rawQuery(sql);
+
+    return List.generate(result.length, (i) => NoteModel.fromMap(result[i]));
   }
 
   ///////// insert to db

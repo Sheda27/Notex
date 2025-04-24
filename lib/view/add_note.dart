@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:notes/MyDb.dart';
-import 'package:notes/appColor.dart';
-import 'extrnalwidgets.dart';
+import 'package:get/get.dart';
+import 'package:notes/controller/controler.dart';
+import 'package:notes/model/color.dart';
+import 'package:notes/model/my_db.dart';
 
 class Addnote extends StatefulWidget {
   const Addnote({super.key});
@@ -12,37 +15,26 @@ class Addnote extends StatefulWidget {
 
 TextEditingController title = TextEditingController();
 TextEditingController cotent = TextEditingController();
+Controler _controler = Get.find();
 
 class _AddnoteState extends State<Addnote> {
   Mydb dTb = Mydb();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bcgC,
-      appBar: AppBar(
-        flexibleSpace: textTamplete("Add Note"),
-        backgroundColor: primaryColor,
-        foregroundColor: textC,
-      ),
+      appBar: AppBar(title: Text("Add Note")),
       body: Column(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30),
-            child: Card(
-              shape: Border(
-                bottom: BorderSide(color: secondaryColor),
-                right: BorderSide(color: secondaryColor),
-              ),
-              color: bcgC,
-              child: TextField(
-                controller: title,
-                style: TextStyle(color: textC2, fontSize: 18),
-                decoration: InputDecoration(
-                  hintText: "Title",
-                  hintStyle: TextStyle(color: textC2, fontSize: 24),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(10),
-                ),
+            child: TextField(
+              controller: title,
+              style: TextStyle(color: textC2, fontSize: 18),
+              decoration: InputDecoration(
+                hintText: "Title",
+                hintStyle: TextStyle(fontSize: 24),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
               ),
             ),
           ),
@@ -54,7 +46,7 @@ class _AddnoteState extends State<Addnote> {
               controller: cotent,
               decoration: InputDecoration(
                 hintText: "Content",
-                hintStyle: TextStyle(color: textC2, fontSize: 18),
+                hintStyle: TextStyle(fontSize: 18),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(10),
               ),
@@ -63,21 +55,23 @@ class _AddnoteState extends State<Addnote> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: primaryColor.withAlpha(80),
-        foregroundColor: textC,
         child: Icon(Icons.done),
         onPressed: () async {
-          int result = await dTb.inserttoDB('''
-INSERT INTO notes (`name`, `content`) VALUES ('${title.text}', '${cotent.text}')
+          final result = await dTb.inserttoDB('''
+INSERT INTO notes_db (`title`, `content`) VALUES ('${title.text}', '${cotent.text}')
 ''');
 
-          print(
+          log(
             "task Added is done ==================================================$result",
+          );
+          _controler.notes.assign(
+            NoteModel(title: title.text, content: cotent.text),
           );
           if (result > 0) {
             title.clear();
             cotent.clear();
-            Navigator.pushReplacementNamed(context, '/home');
+
+            Get.offNamed('/');
           }
         },
       ),
