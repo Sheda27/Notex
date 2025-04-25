@@ -31,7 +31,7 @@ class _HomepageState extends State<Homepage> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Get.toNamed('/addnote');
+            Get.toNamed('/add_note');
           },
           child: Icon(Icons.add),
         ),
@@ -83,9 +83,10 @@ class _HomepageState extends State<Homepage> {
                           children: [
                             SlidableAction(
                               onPressed: (context) {
-                                setState(() {
-                                  ////////
-                                });
+                                Get.toNamed(
+                                  '/edit_note',
+                                  arguments: _controler.notes[index],
+                                );
                               },
 
                               icon: Icons.edit,
@@ -95,7 +96,7 @@ class _HomepageState extends State<Homepage> {
                           ],
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
+                          padding: const EdgeInsets.only(top: 3),
                           child: ListTile(
                             title: Text(
                               "Title: ${_controler.notes[index].title}",
@@ -149,7 +150,7 @@ Drawer _buildDrawer(BuildContext context) {
           title: Text('Add Note'),
           onTap: () {
             // Handle navigation to Add Note
-            Get.toNamed('/addnote');
+            Get.toNamed('/add_note');
             log("add notes------------------------------------------");
           },
         ),

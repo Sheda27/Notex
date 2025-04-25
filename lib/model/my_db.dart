@@ -43,7 +43,7 @@ class Mydb {
     log("TABLE CREATED^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   }
 
-  /////// select from db
+  //--------- select from db
   selectFromDB(String sql) async {
     Database? ocdb = await database;
     List<Map<String, dynamic>> result = await ocdb!.rawQuery(sql);
@@ -51,21 +51,21 @@ class Mydb {
     return List.generate(result.length, (i) => NoteModel.fromMap(result[i]));
   }
 
-  ///////// insert to db
+  //--------- insert to db
   inserttoDB(String sql) async {
     Database? ocdb = await database;
     int result = await ocdb!.rawInsert(sql);
     return result;
   }
 
-  /////// update to db
+  //--------- update to db
   updateDB(String sql) async {
     Database? ocdb = await database;
     int result = await ocdb!.rawUpdate(sql);
     return result;
   }
 
-  ///////// delete from db
+  //--------- delete from db
   deleteFromDB(String sql) async {
     Database? ocdb = await database;
     int result = await ocdb!.rawDelete(sql);

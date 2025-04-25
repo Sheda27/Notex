@@ -4,6 +4,7 @@ import 'package:notes/controller/controler.dart';
 import 'package:notes/model/color.dart';
 import 'package:notes/model/extrnalwidgets.dart';
 import 'package:notes/view/add_note.dart';
+import 'package:notes/view/editnote.dart';
 import 'package:notes/view/homePage.dart';
 import 'package:notes/view/settings.dart';
 
@@ -31,8 +32,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => Homepage()),
-        GetPage(name: '/addnote', page: () => Addnote()),
+        GetPage(name: '/add_note', page: () => Addnote()),
         GetPage(name: '/settings', page: () => Settings()),
+        GetPage(name: '/edit_note', page: () => EditNote()),
       ],
     );
   }

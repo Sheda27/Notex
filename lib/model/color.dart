@@ -16,3 +16,4 @@ Color bcgDark = Color.fromARGB(255, 53, 52, 52);
 Color one = Color.fromARGB(191, 7, 7, 53);
 Color tow = Color.fromARGB(190, 28, 158, 19);
 Color three = Color.fromARGB(188, 201, 201, 201);
+Color four = Color.fromARGB(187, 189, 189, 189);

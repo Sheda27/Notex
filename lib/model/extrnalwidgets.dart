@@ -10,7 +10,11 @@ ThemeData themeLight() {
       titleTextStyle: TextStyle(color: three, fontSize: 28),
     ),
     drawerTheme: DrawerThemeData(backgroundColor: three),
-
+    textTheme: TextTheme(
+      titleMedium: TextStyle(color: one),
+      bodyMedium: TextStyle(color: one),
+      bodySmall: TextStyle(color: one),
+    ),
     scaffoldBackgroundColor: three,
     buttonTheme: ButtonThemeData(buttonColor: secondaryColor),
     listTileTheme: ListTileThemeData(
@@ -19,6 +23,10 @@ ThemeData themeLight() {
       subtitleTextStyle: TextStyle(color: one, fontSize: 16),
     ),
 
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: TextStyle(color: one),
+      labelStyle: TextStyle(color: one),
+    ),
     hintColor: one,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: one.withAlpha(450),
@@ -35,6 +43,12 @@ ThemeData themeDark() {
       foregroundColor: textDark,
       titleTextStyle: TextStyle(color: three, fontSize: 28),
     ),
+    textTheme: TextTheme(
+      titleMedium: TextStyle(color: three),
+      bodyMedium: TextStyle(color: three),
+      bodySmall: TextStyle(color: three),
+    ),
+
     drawerTheme: DrawerThemeData(backgroundColor: bcgDark),
     scaffoldBackgroundColor: bcgDark,
     buttonTheme: ButtonThemeData(buttonColor: secondryDark),
@@ -42,6 +56,10 @@ ThemeData themeDark() {
       tileColor: one.withAlpha(70),
       titleTextStyle: TextStyle(color: three, fontSize: 20),
       subtitleTextStyle: TextStyle(color: three, fontSize: 16),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: TextStyle(color: three),
+      labelStyle: TextStyle(color: three),
     ),
     hintColor: three,
     floatingActionButtonTheme: FloatingActionButtonThemeData(

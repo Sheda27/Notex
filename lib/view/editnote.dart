@@ -6,23 +6,34 @@ import 'package:notes/controller/controler.dart';
 import 'package:notes/model/color.dart';
 import 'package:notes/model/my_db.dart';
 
-class Addnote extends StatefulWidget {
-  const Addnote({super.key});
+@immutable
+class EditNote extends StatefulWidget {
+  const EditNote({super.key});
 
   @override
-  State<Addnote> createState() => _AddnoteState();
+  State<EditNote> createState() => _EditNoteState();
 }
 
-TextEditingController title = TextEditingController();
-TextEditingController cotent = TextEditingController();
+TextEditingController edtitle = TextEditingController();
+TextEditingController edcontent = TextEditingController();
 Controler _controler = Get.find();
 
-class _AddnoteState extends State<Addnote> {
+class _EditNoteState extends State<EditNote> {
   Mydb dTb = Mydb();
+  late NoteModel note;
+  @override
+  void initState() {
+    super.initState();
+    note = Get.arguments as NoteModel;
+    edtitle.text = note.title!;
+    edcontent.text = note.content!;
+    log('recived: ${note.title} -------- recived: ${note.content}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Note")),
+      appBar: AppBar(title: Text("Edit Note")),
       body: Column(
         children: [
           ClipRRect(
@@ -30,7 +41,7 @@ class _AddnoteState extends State<Addnote> {
             child: Card(
               color: four,
               child: TextFormField(
-                controller: title,
+                controller: edtitle,
                 decoration: InputDecoration(
                   hintText: "Title",
                   border: InputBorder.none,
@@ -46,10 +57,9 @@ class _AddnoteState extends State<Addnote> {
               child: TextFormField(
                 maxLines: null,
                 minLines: null,
-                controller: cotent,
+                controller: edcontent,
                 decoration: InputDecoration(
                   hintText: "Content",
-
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.all(10),
                 ),
@@ -61,19 +71,21 @@ class _AddnoteState extends State<Addnote> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
         onPressed: () async {
-          final result = await dTb.inserttoDB('''
-INSERT INTO notes_db (`title`, `content`) VALUES ('${title.text}', '${cotent.text}')
+          final result = await dTb.updateDB('''
+UPDATE notes_db 
+SET title = '${edtitle.text}', content = '${edcontent.text}' 
+WHERE id = ${note.id}
 ''');
 
           log(
-            "task Added is done ==================================================$result",
+            "Note updated successfully ==================================================$result",
           );
-          _controler.notes.assign(
-            NoteModel(title: title.text, content: cotent.text),
-          );
+
           if (result > 0) {
-            title.clear();
-            cotent.clear();
+            _controler.notes.refresh();
+
+            edtitle.clear();
+            edcontent.clear();
 
             Get.offNamed('/');
           }

@@ -43,19 +43,16 @@ class Controler extends GetxController {
 }
 
 class ThemeCtrl extends GetxController {
-  // @override
-  // void onInit() {
-  //   getThemePref();
-  //   super.onInit();
-  // }
-
+  //theme controller
   RxBool isDark = false.obs;
-  Future<void> setThemePref(bool value) async {
+  //set theme preference value
+  Future<void> setThemePref(bool state) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('darkmode', isDark.value);
     isDark = isDark.value.obs;
   }
 
+  //get theme preference value
   Future<void> getThemePref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isDark.value = prefs.getBool('darkmode') ?? false;
