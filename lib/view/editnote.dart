@@ -38,31 +38,25 @@ class _EditNoteState extends State<EditNote> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30),
-            child: Card(
-              color: four,
-              child: TextFormField(
-                controller: edtitle,
-                decoration: InputDecoration(
-                  hintText: "Title",
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(10),
-                ),
+            child: TextFormField(
+              controller: edtitle,
+              decoration: InputDecoration(
+                hintText: "Title",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
               ),
             ),
           ),
           SizedBox(height: 2, child: Container(color: three)),
           Expanded(
-            child: Card(
-              color: four,
-              child: TextFormField(
-                maxLines: null,
-                minLines: null,
-                controller: edcontent,
-                decoration: InputDecoration(
-                  hintText: "Content",
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(10),
-                ),
+            child: TextFormField(
+              maxLines: null,
+              minLines: null,
+              controller: edcontent,
+              decoration: InputDecoration(
+                hintText: "Content",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
               ),
             ),
           ),

@@ -27,32 +27,26 @@ class _AddnoteState extends State<Addnote> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30),
-            child: Card(
-              color: four,
-              child: TextFormField(
-                controller: title,
-                decoration: InputDecoration(
-                  hintText: "Title",
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(10),
-                ),
+            child: TextFormField(
+              controller: title,
+              decoration: InputDecoration(
+                hintText: "Title",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
               ),
             ),
           ),
           SizedBox(height: 2, child: Container(color: three)),
           Expanded(
-            child: Card(
-              color: four,
-              child: TextFormField(
-                maxLines: null,
-                minLines: null,
-                controller: cotent,
-                decoration: InputDecoration(
-                  hintText: "Content",
+            child: TextFormField(
+              maxLines: null,
+              minLines: null,
+              controller: cotent,
+              decoration: InputDecoration(
+                hintText: "Content",
 
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(10),
-                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
               ),
             ),
           ),
@@ -75,7 +69,7 @@ INSERT INTO notes_db (`title`, `content`) VALUES ('${title.text}', '${cotent.tex
             title.clear();
             cotent.clear();
 
-            Get.offNamed('/');
+            Get.offNamed('/note_page');
           }
         },
       ),

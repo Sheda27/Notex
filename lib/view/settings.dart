@@ -28,21 +28,14 @@ class _SettingsState extends State<Settings> {
                   title: Text('Dark mode'),
                   onChanged: (value) {
                     cotroller.isDark.value = value;
-
-                    setState(() {
-                      if (value == true) {
-                        log('dark mode is on');
-                        Get.changeTheme(themeDark());
-                      }
-                    });
-
-                    setState(() {
-                      if (value == false) {
-                        log('light mode is on');
-                        Get.changeTheme(themeLight());
-                      }
-                    });
-
+                    if (value == true) {
+                      log('dark mode is on');
+                      Get.changeTheme(themeDark());
+                    } else {
+                      log('light mode is on');
+                      Get.changeTheme(themeLight());
+                    }
+                    setState(() {});
                     _themeCtrl.setThemePref(value);
                   },
                 ),

@@ -4,9 +4,12 @@ import 'package:notes/controller/controler.dart';
 import 'package:notes/model/color.dart';
 import 'package:notes/model/extrnalwidgets.dart';
 import 'package:notes/view/add_note.dart';
+import 'package:notes/view/category.dart';
 import 'package:notes/view/editnote.dart';
-import 'package:notes/view/homePage.dart';
+import 'package:notes/view/home_page.dart';
+import 'package:notes/view/notes_page.dart';
 import 'package:notes/view/settings.dart';
+import 'package:notes/view/to_do_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +34,13 @@ class MyApp extends StatelessWidget {
       darkTheme: themeDark(),
       initialRoute: '/',
       getPages: [
-        GetPage(name: '/', page: () => Homepage()),
+        GetPage(name: '/', page: () => HomePage()),
+        GetPage(name: '/note_page', page: () => Notespage()),
         GetPage(name: '/add_note', page: () => Addnote()),
         GetPage(name: '/settings', page: () => Settings()),
         GetPage(name: '/edit_note', page: () => EditNote()),
+        GetPage(name: '/todos', page: () => ToDoList()),
+        GetPage(name: '/categ', page: () => Category()),
       ],
     );
   }

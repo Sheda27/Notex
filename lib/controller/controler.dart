@@ -55,6 +55,6 @@ class ThemeCtrl extends GetxController {
   //get theme preference value
   Future<void> getThemePref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isDark.value = prefs.getBool('darkmode') ?? false;
+    isDark.value = prefs.getBool('darkmode')!;
   }
 }

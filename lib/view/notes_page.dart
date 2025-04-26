@@ -8,16 +8,16 @@ import 'package:get/state_manager.dart';
 import 'package:notes/model/color.dart';
 import 'package:notes/controller/controler.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class Notespage extends StatefulWidget {
+  const Notespage({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<Notespage> createState() => _NotespageState();
 }
 
 Controler _controler = Get.put(Controler());
 
-class _HomepageState extends State<Homepage> {
+class _NotespageState extends State<Notespage> {
   @override
   void initState() {
     _controler.readData();
@@ -43,7 +43,7 @@ class _HomepageState extends State<Homepage> {
             Obx(() {
               if (_controler.notes.isEmpty) {
                 return Center(
-                  child: Text("No Notes", style: TextStyle(fontSize: 25)),
+                  child: Text("Add Some Notes", style: TextStyle(fontSize: 25)),
                 );
               } else {
                 return Expanded(
@@ -97,12 +97,15 @@ class _HomepageState extends State<Homepage> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(top: 3),
-                          child: ListTile(
-                            title: Text(
-                              "Title: ${_controler.notes[index].title}",
-                            ),
-                            subtitle: Text(
-                              "Subtitle: ${_controler.notes[index].content}",
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: ExpansionTile(
+                              title: Text(
+                                " ${_controler.notes[index].title} :",
+                              ),
+                              children: [
+                                Text(" ${_controler.notes[index].content}"),
+                              ],
                             ),
                           ),
                         ),
@@ -115,13 +118,13 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
 
-        drawer: _buildDrawer(context),
+        drawer: buildDrawer(context),
       ),
     );
   }
 }
 
-Drawer _buildDrawer(BuildContext context) {
+Drawer buildDrawer(BuildContext context) {
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -137,10 +140,10 @@ Drawer _buildDrawer(BuildContext context) {
           tileColor: Color.fromRGBO(222, 166, 122, 0),
 
           leading: const Icon(Icons.note, color: Colors.white),
-          title: Text('All Notes'),
+          title: Text('HOME'),
           onTap: () {
             // Handle navigation to All Notes
-            Get.toNamed('/home');
+            Get.toNamed('/');
             log("all notes------------------------------------------");
           },
         ),

@@ -17,12 +17,19 @@ ThemeData themeLight() {
     ),
     scaffoldBackgroundColor: three,
     buttonTheme: ButtonThemeData(buttonColor: secondaryColor),
+    expansionTileTheme: ExpansionTileThemeData(
+      backgroundColor: three.withAlpha(1000),
+      textColor: one,
+      collapsedTextColor: one,
+      collapsedBackgroundColor: three.withAlpha(100),
+      expandedAlignment: Alignment.topRight,
+      childrenPadding: EdgeInsets.only(right: 20),
+    ),
     listTileTheme: ListTileThemeData(
       tileColor: three.withAlpha(1000),
       titleTextStyle: TextStyle(color: one, fontSize: 20),
       subtitleTextStyle: TextStyle(color: one, fontSize: 16),
     ),
-
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: one),
       labelStyle: TextStyle(color: one),
@@ -39,7 +46,7 @@ ThemeData themeLight() {
 ThemeData themeDark() {
   return ThemeData(
     appBarTheme: AppBarTheme(
-      backgroundColor: one,
+      backgroundColor: bcgC,
       foregroundColor: textDark,
       titleTextStyle: TextStyle(color: three, fontSize: 28),
     ),
@@ -50,8 +57,16 @@ ThemeData themeDark() {
     ),
 
     drawerTheme: DrawerThemeData(backgroundColor: bcgDark),
-    scaffoldBackgroundColor: bcgDark,
+    scaffoldBackgroundColor: one,
     buttonTheme: ButtonThemeData(buttonColor: secondryDark),
+    expansionTileTheme: ExpansionTileThemeData(
+      backgroundColor: one.withAlpha(70),
+      textColor: three,
+      collapsedTextColor: three,
+      collapsedBackgroundColor: one.withAlpha(150),
+      expandedAlignment: Alignment.topRight,
+      childrenPadding: EdgeInsets.only(right: 20),
+    ),
     listTileTheme: ListTileThemeData(
       tileColor: one.withAlpha(70),
       titleTextStyle: TextStyle(color: three, fontSize: 20),
