@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:notes/controller/controler.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -21,7 +19,7 @@ class Mydb {
     Database database = await openDatabase(
       path,
       onCreate: _onCreate,
-      version: 1,
+      version: 3,
       onUpgrade: _onUpgrade,
     );
     return database;
@@ -35,40 +33,62 @@ class Mydb {
     await ocdb.execute('''
    CREATE TABLE notes_db (
    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-   title TEXT NOT NULL,
-   content TEXT NOT NULL
+   title TEXT ,
+   content TEXT,
+   category_id INTEGER,
+  FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
 ''');
-    log("TABLE CREATED^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    await ocdb.execute('''
+   CREATE TABLE category (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   label TEXT
+     );
+           ''');
+    log("TABLE CREATED-------------------------------");
   }
 
   //--------- select from db
-  selectFromDB(String sql) async {
+  selectFromDB(String table) async {
     Database? ocdb = await database;
-    List<Map<String, dynamic>> result = await ocdb!.rawQuery(sql);
+    List<Map<String, dynamic>> result = await ocdb!.query(table);
 
-    return List.generate(result.length, (i) => NoteModel.fromMap(result[i]));
+    return result;
+  }
+
+  //--------- select by category
+  selectFromDbByCategory(String table, String where) async {
+    Database? ocdb = await database;
+    List<Map<String, dynamic>> result = await ocdb!.query(table, where: where);
+
+    return result;
   }
 
   //--------- insert to db
-  inserttoDB(String sql) async {
+  inserttoDB(String table, Map<String, Object?> values) async {
     Database? ocdb = await database;
-    int result = await ocdb!.rawInsert(sql);
+    int result = await ocdb!.insert(table, values);
     return result;
   }
 
   //--------- update to db
-  updateDB(String sql) async {
+  updateDB(String table, Map<String, Object?> values, String? where) async {
     Database? ocdb = await database;
-    int result = await ocdb!.rawUpdate(sql);
+    int result = await ocdb!.update(table, values, where: where);
     return result;
   }
 
   //--------- delete from db
-  deleteFromDB(String sql) async {
+  deleteFromDB(String table, String? where) async {
     Database? ocdb = await database;
-    int result = await ocdb!.rawDelete(sql);
+    int result = await ocdb!.delete(table, where: where);
     return result;
+  }
+
+  //--------- drop table
+  Future<void> dropFromDB(String table) async {
+    Database? ocdb = await database;
+    await ocdb!.execute('DROP TABLE IF EXISTS $table');
   }
 }

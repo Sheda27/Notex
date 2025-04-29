@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
                 height: 170,
                 child: Center(
                   child: Text(
-                    'HI THERE !!',
+                    'WELCOME !!',
                     style: TextStyle(fontSize: 50, color: three),
                   ),
                 ),

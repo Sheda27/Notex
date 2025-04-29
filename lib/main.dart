@@ -13,8 +13,8 @@ import 'package:notes/view/to_do_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final ThemeCtrl _themeCtrl = Get.put(ThemeCtrl());
-  await _themeCtrl.getThemePref();
+  final ThemeCtrl themeCtrl = Get.put(ThemeCtrl());
+  await themeCtrl.getThemePref();
   runApp(MyApp());
 }
 

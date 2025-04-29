@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes/controller/controler.dart';
 import 'package:notes/model/extrnalwidgets.dart';
+import 'package:notes/model/my_db.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -12,6 +13,7 @@ class Settings extends StatefulWidget {
 }
 
 ThemeCtrl _themeCtrl = Get.put(ThemeCtrl());
+Mydb dTb = Mydb();
 
 class _SettingsState extends State<Settings> {
   @override
@@ -39,6 +41,17 @@ class _SettingsState extends State<Settings> {
                     _themeCtrl.setThemePref(value);
                   },
                 ),
+          ),
+          TextButton(
+            onPressed: () async {
+              await dTb.dropFromDB('notes_db');
+
+              log('drop---------------------');
+              await dTb.dropFromDB('category');
+
+              log('drop---------------------');
+            },
+            child: Text('DELETE DATABASE!!!!!!!!!!'),
           ),
         ],
       ),

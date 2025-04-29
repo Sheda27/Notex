@@ -5,7 +5,7 @@ import 'package:notes/model/color.dart';
 ThemeData themeLight() {
   return ThemeData(
     appBarTheme: AppBarTheme(
-      backgroundColor: one,
+      backgroundColor: bcgC,
       foregroundColor: three,
       titleTextStyle: TextStyle(color: three, fontSize: 28),
     ),
@@ -14,6 +14,10 @@ ThemeData themeLight() {
       titleMedium: TextStyle(color: one),
       bodyMedium: TextStyle(color: one),
       bodySmall: TextStyle(color: one),
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: bcgC,
+      labelStyle: TextStyle(color: three),
     ),
     scaffoldBackgroundColor: three,
     buttonTheme: ButtonThemeData(buttonColor: secondaryColor),
@@ -36,7 +40,7 @@ ThemeData themeLight() {
     ),
     hintColor: one,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: one.withAlpha(450),
+      backgroundColor: bcgC.withAlpha(450),
       foregroundColor: three,
     ),
   );
@@ -50,25 +54,25 @@ ThemeData themeDark() {
       foregroundColor: textDark,
       titleTextStyle: TextStyle(color: three, fontSize: 28),
     ),
+
     textTheme: TextTheme(
       titleMedium: TextStyle(color: three),
       bodyMedium: TextStyle(color: three),
       bodySmall: TextStyle(color: three),
     ),
+    chipTheme: ChipThemeData(
+      side: BorderSide(width: 0.5, color: three),
+      surfaceTintColor: three,
+      backgroundColor: bcgC,
+      labelStyle: TextStyle(color: three),
+    ),
 
     drawerTheme: DrawerThemeData(backgroundColor: bcgDark),
     scaffoldBackgroundColor: one,
     buttonTheme: ButtonThemeData(buttonColor: secondryDark),
-    expansionTileTheme: ExpansionTileThemeData(
-      backgroundColor: one.withAlpha(70),
-      textColor: three,
-      collapsedTextColor: three,
-      collapsedBackgroundColor: one.withAlpha(150),
-      expandedAlignment: Alignment.topRight,
-      childrenPadding: EdgeInsets.only(right: 20),
-    ),
+
     listTileTheme: ListTileThemeData(
-      tileColor: one.withAlpha(70),
+      tileColor: bcgC.withAlpha(90),
       titleTextStyle: TextStyle(color: three, fontSize: 20),
       subtitleTextStyle: TextStyle(color: three, fontSize: 16),
     ),
@@ -78,7 +82,7 @@ ThemeData themeDark() {
     ),
     hintColor: three,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: one.withAlpha(400),
+      backgroundColor: bcgC.withAlpha(400),
       foregroundColor: three,
     ),
   );

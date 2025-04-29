@@ -16,12 +16,15 @@ class Notespage extends StatefulWidget {
 }
 
 Controler _controler = Get.put(Controler());
+ChipControler _controlerch = Get.put(ChipControler());
+
+int? selected;
 
 class _NotespageState extends State<Notespage> {
   @override
   void initState() {
     _controler.readData();
-
+    _controlerch.readCategoryData();
     super.initState();
   }
 
@@ -37,85 +40,147 @@ class _NotespageState extends State<Notespage> {
         ),
 
         appBar: AppBar(title: Text("Notes")),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(() {
-              if (_controler.notes.isEmpty) {
-                return Center(
-                  child: Text("Add Some Notes", style: TextStyle(fontSize: 25)),
-                );
-              } else {
-                return Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _controler.notes.length,
-                    itemBuilder: (context, index) {
-                      return Slidable(
-                        startActionPane: ActionPane(
-                          motion: StretchMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (context) async {
-                                var result = await dTb.deleteFromDB(
-                                  'DELETE FROM notes_db WHERE id = ${_controler.notes[index].id}',
-                                );
-                                if (result > 0) {
-                                  _controler.update();
+        body: RefreshIndicator(
+          onRefresh: () {
+            _controlerch.readCategoryData();
+            return _controler.readData();
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
 
-                                  log(
-                                    "Deleted successfully=================================================$result",
+                  itemCount: _controlerch.chips.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 3),
+                      child: GestureDetector(
+                        onTap: () async {
+                          // var result = _controler.readDataByCategory(index);
+                          selected = _controlerch.chips[index].chipId;
+                          var result = await dTb.selectFromDbByCategory(
+                            "notes_db",
+                            "category_id= $selected",
+                          );
+                          _controler.filterdNotes = List.generate(
+                            result.length,
+                            (i) => NoteModel.fromMap(result[i]),
+                          );
+                          setState(() {
+                            _controler.notes = RxList<NoteModel>.from(
+                              _controler.filterdNotes,
+                            );
+                          });
+                          log('selected category========= $result');
+                        },
+                        child: Chip(
+                          label: Text('${_controlerch.chips[index].chiplabel}'),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Obx(() {
+                if (_controler.notes.isEmpty) {
+                  return Flexible(
+                    child: Center(
+                      child: Text(
+                        "Add Some Notes",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _controler.notes.length,
+                      itemBuilder: (context, index) {
+                        return Slidable(
+                          startActionPane: ActionPane(
+                            motion: StretchMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) async {
+                                  var result = await dTb.deleteFromDB(
+                                    "notes_db",
+                                    "id =  ${_controler.notes[index].id} ",
                                   );
+                                  if (result > 0) {
+                                    _controler.update();
 
-                                  setState(() {
-                                    _controler.readData();
-                                  });
-                                }
-                              },
-                              icon: Icons.delete,
-                              label: 'Delete',
-                              backgroundColor: Color.fromARGB(255, 129, 38, 38),
-                            ),
-                          ],
-                        ),
-                        endActionPane: ActionPane(
-                          motion: StretchMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (context) {
-                                Get.toNamed(
-                                  '/edit_note',
-                                  arguments: _controler.notes[index],
-                                );
-                              },
+                                    log(
+                                      "Deleted successfully=================================================$result",
+                                    );
 
-                              icon: Icons.edit,
-                              label: 'edit',
-                              backgroundColor: Color.fromRGBO(231, 147, 44, 1),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: ExpansionTile(
-                              title: Text(
-                                " ${_controler.notes[index].title} :",
+                                    setState(() {
+                                      _controler.readData();
+                                    });
+                                  }
+                                },
+                                borderRadius: BorderRadius.circular(50),
+                                icon: Icons.delete,
+                                label: 'Delete',
+                                backgroundColor: tow,
                               ),
-                              children: [
-                                Text(" ${_controler.notes[index].content}"),
-                              ],
+                            ],
+                          ),
+                          endActionPane: ActionPane(
+                            motion: StretchMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  Get.toNamed(
+                                    '/edit_note',
+                                    arguments: _controler.notes[index],
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(50),
+                                icon: Icons.edit,
+                                label: 'edit',
+                                backgroundColor: four,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 3),
+                            child: Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: SizedBox(
+                                  height: 75,
+                                  child: Card(
+                                    color: const Color.fromARGB(0, 64, 64, 86),
+                                    child: ListTile(
+                                      title: Text(
+                                        " العنوان : ${_controler.notes[index].title} ",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      subtitle: Text(
+                                        " الموضوع : ${_controler.notes[index].content}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }
-            }),
-          ],
+                        );
+                      },
+                    ),
+                  );
+                }
+              }),
+            ],
+          ),
         ),
 
         drawer: buildDrawer(context),
