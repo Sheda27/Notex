@@ -174,7 +174,9 @@ void showCategoryDialog(BuildContext context) {
                   category.text = _controlerch.chips[i].chiplabel.toString();
                   Get.back();
                 },
-                child: Chip(label: Text('${_controlerch.chips[i].chiplabel}')),
+                child: ListTile(
+                  title: Text('${_controlerch.chips[i].chiplabel}'),
+                ),
               );
             },
           ),

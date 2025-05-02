@@ -18,7 +18,6 @@ class ToDoList extends StatefulWidget {
 
 Mydb dTb = Mydb();
 ToDoCtrl _toDoCtrl = Get.put(ToDoCtrl());
-var iconBefore = Icon(Icons.check_circle);
 
 class _ToDoListState extends State<ToDoList> {
   @override
@@ -187,12 +186,7 @@ class _ToDoListState extends State<ToDoList> {
                                     setState(() {});
                                   }
                                   log('$result');
-                                  setState(() {
-                                    iconBefore = Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green,
-                                    );
-                                  });
+                                  setState(() {});
                                   Get.snackbar(
                                     "",
                                     "Added to Completed Tasks",
@@ -201,7 +195,7 @@ class _ToDoListState extends State<ToDoList> {
                                     colorText: bcgDark,
                                   );
                                 },
-                                icon: iconBefore,
+                                icon: Icon(Icons.check_circle),
                               ),
                             ),
                           ),

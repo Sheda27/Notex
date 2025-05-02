@@ -72,6 +72,13 @@ class Mydb {
     return result;
   }
 
+  selectorderdFromDB(String table, String ob) async {
+    Database? ocdb = await database;
+    List<Map<String, dynamic>> result = await ocdb!.query(table, orderBy: ob);
+
+    return result;
+  }
+
   //--------- select by category
   selectFromDbByCategory(String table, String where) async {
     Database? ocdb = await database;

@@ -199,12 +199,3 @@ class _EditNoteState extends State<EditNote> {
     );
   }
 }
-
-// void edshowCategoryDialog(BuildContext context) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return
-//     },
-//   );
-// }

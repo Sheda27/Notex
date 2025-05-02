@@ -108,7 +108,7 @@ class _EditTodoState extends State<EditTodo> {
                       if (result > 0) {
                         Get.snackbar(
                           "",
-                          "Task Added succesfully",
+                          "Task Updated succesfully",
                           colorText: bcgDark,
                           duration: Duration(seconds: 3),
                           snackPosition: SnackPosition.BOTTOM,
