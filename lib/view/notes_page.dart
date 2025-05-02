@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:notes/model/color.dart';
@@ -23,84 +26,85 @@ int? selected;
 class _NotespageState extends State<Notespage> {
   @override
   void initState() {
-    _controler.readData();
-    _controlerch.readCategoryData();
     super.initState();
+    _controlerch.readCategoryData();
+    _controler.readData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Get.toNamed('/add_note');
-          },
-          child: Icon(Icons.add),
-        ),
+    return Scaffold(
+      drawer: buildDrawer(context),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed('/add_note');
+        },
+        child: Icon(Icons.add),
+      ),
 
-        appBar: AppBar(title: Text("Notes")),
-        body: RefreshIndicator(
-          onRefresh: () {
-            _controlerch.readCategoryData();
-            return _controler.readData();
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 50,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
+      appBar: AppBar(title: Text("Notes")),
+      body: RefreshIndicator(
+        onRefresh: () {
+          _controlerch.readCategoryData();
+          return _controler.readData();
+        },
 
-                  itemCount: _controlerch.chips.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 3),
-                      child: GestureDetector(
-                        onTap: () async {
-                          // var result = _controler.readDataByCategory(index);
-                          selected = _controlerch.chips[index].chipId;
-                          var result = await dTb.selectFromDbByCategory(
-                            "notes_db",
-                            "category_id= $selected",
-                          );
-                          _controler.filterdNotes = List.generate(
-                            result.length,
-                            (i) => NoteModel.fromMap(result[i]),
-                          );
-                          setState(() {
-                            _controler.notes = RxList<NoteModel>.from(
-                              _controler.filterdNotes,
-                            );
-                          });
-                          log('selected category========= $result');
-                        },
-                        child: Chip(
-                          label: Text('${_controlerch.chips[index].chiplabel}'),
-                        ),
-                      ),
-                    );
-                  },
+        child: Card(
+          child: Obx(() {
+            if (_controler.notes.isEmpty) {
+              return Center(
+                child: Text(
+                  "Add Some Notes",
+                  style: TextStyle(fontSize: 25.sp),
                 ),
-              ),
-              Obx(() {
-                if (_controler.notes.isEmpty) {
-                  return Flexible(
-                    child: Center(
-                      child: Text(
-                        "Add Some Notes",
-                        style: TextStyle(fontSize: 25),
-                      ),
+              );
+            } else {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: 50.h,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+
+                      itemCount: _controlerch.chips.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 3),
+                          child: GestureDetector(
+                            onTap: () async {
+                              selected = _controlerch.chips[index].chipId;
+                              var result = await dTb.selectFromDbByCategory(
+                                "notes_db",
+                                "category_id= $selected",
+                              );
+                              _controler.filterdNotes = List.generate(
+                                result.length,
+                                (i) => NoteModel.fromMap(result[i]),
+                              );
+                              setState(() {
+                                _controler.notes = RxList<NoteModel>.from(
+                                  _controler.filterdNotes,
+                                );
+                              });
+                              log('selected category========= $result');
+                            },
+                            child: Chip(
+                              label: Text(
+                                '${_controlerch.chips[index].chiplabel}',
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                } else {
-                  return Flexible(
+                  ),
+                  Flexible(
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: _controler.notes.length,
                       itemBuilder: (context, index) {
                         return Slidable(
+                          dragStartBehavior: DragStartBehavior.start,
                           startActionPane: ActionPane(
                             motion: StretchMotion(),
                             children: [
@@ -112,7 +116,13 @@ class _NotespageState extends State<Notespage> {
                                   );
                                   if (result > 0) {
                                     _controler.update();
-
+                                    Get.snackbar(
+                                      "",
+                                      "Note Deleted Succecfully",
+                                      colorText: bcgDark,
+                                      duration: Duration(seconds: 3),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                    );
                                     log(
                                       "Deleted successfully=================================================$result",
                                     );
@@ -122,7 +132,6 @@ class _NotespageState extends State<Notespage> {
                                     });
                                   }
                                 },
-                                borderRadius: BorderRadius.circular(50),
                                 icon: Icons.delete,
                                 label: 'Delete',
                                 backgroundColor: tow,
@@ -139,7 +148,6 @@ class _NotespageState extends State<Notespage> {
                                     arguments: _controler.notes[index],
                                   );
                                 },
-                                borderRadius: BorderRadius.circular(50),
                                 icon: Icons.edit,
                                 label: 'edit',
                                 backgroundColor: four,
@@ -147,26 +155,26 @@ class _NotespageState extends State<Notespage> {
                             ],
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 3),
+                            padding: const EdgeInsets.only(top: 1).r,
                             child: Directionality(
                               textDirection: TextDirection.rtl,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: SizedBox(
-                                  height: 75,
-                                  child: Card(
-                                    color: const Color.fromARGB(0, 64, 64, 86),
-                                    child: ListTile(
-                                      title: Text(
-                                        " العنوان : ${_controler.notes[index].title} ",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      subtitle: Text(
-                                        " الموضوع : ${_controler.notes[index].content}",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                              child: SizedBox(
+                                height: 78.h,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(
+                                        horizontal: 3,
+                                      ).r,
+                                  child: ListTile(
+                                    title: Text(
+                                      " العنوان : ${_controler.notes[index].title} ",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    subtitle: Text(
+                                      " الموضوع : ${_controler.notes[index].content}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
@@ -176,14 +184,12 @@ class _NotespageState extends State<Notespage> {
                         );
                       },
                     ),
-                  );
-                }
-              }),
-            ],
-          ),
+                  ),
+                ],
+              );
+            }
+          }),
         ),
-
-        drawer: buildDrawer(context),
       ),
     );
   }
@@ -191,11 +197,12 @@ class _NotespageState extends State<Notespage> {
 
 Drawer buildDrawer(BuildContext context) {
   return Drawer(
+    width: 0.8.sw,
     child: ListView(
       padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-          decoration: BoxDecoration(color: one),
+          decoration: BoxDecoration(color: bcgDark),
           child: const Text(
             'Notex',
             style: TextStyle(color: Colors.white, fontSize: 24),
@@ -208,18 +215,40 @@ Drawer buildDrawer(BuildContext context) {
           title: Text('HOME'),
           onTap: () {
             // Handle navigation to All Notes
-            Get.toNamed('/');
+            Get.toNamed('/note_page');
             log("all notes------------------------------------------");
           },
         ),
         ListTile(
           tileColor: Color.fromRGBO(222, 166, 122, 0),
-          leading: const Icon(Icons.add, color: Colors.white),
-          title: Text('Add Note'),
+          leading: const Icon(Icons.category, color: Colors.white),
+          title: Text('Categoies'),
           onTap: () {
             // Handle navigation to Add Note
-            Get.toNamed('/add_note');
+            Get.toNamed('/categ');
             log("add notes------------------------------------------");
+          },
+        ),
+        ListTile(
+          tileColor: Color.fromRGBO(222, 166, 122, 0),
+          leading: const Icon(Icons.task_alt, color: Colors.white),
+          title: Text('To Do List'),
+          onTap: () {
+            // Handle navigation to Add Note
+            Get.toNamed('/todos');
+            log("add notes------------------------------------------");
+          },
+        ),
+
+        ListTile(
+          tileColor: Color.fromRGBO(222, 166, 122, 0),
+
+          leading: const Icon(Icons.list, color: Colors.white),
+          title: Text('completed todo'),
+          onTap: () {
+            // Handle navigation to Settings
+            Get.toNamed('/completed_todo');
+            log("completed todo------------------------------------------");
           },
         ),
         ListTile(

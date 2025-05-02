@@ -46,6 +46,21 @@ class Mydb {
    label TEXT
      );
            ''');
+    await ocdb.execute('''
+   CREATE TABLE todos (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   title TEXT,
+   discribe TEXT,
+   date TEXT, 
+   priority INTEGER
+     );
+           ''');
+    await ocdb.execute('''
+   CREATE TABLE completedtodos (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   title TEXT
+     );
+           ''');
     log("TABLE CREATED-------------------------------");
   }
 
@@ -89,6 +104,7 @@ class Mydb {
   //--------- drop table
   Future<void> dropFromDB(String table) async {
     Database? ocdb = await database;
-    await ocdb!.execute('DROP TABLE IF EXISTS $table');
+    var res = await ocdb!.execute('DROP TABLE IF EXISTS $table');
+    return res;
   }
 }

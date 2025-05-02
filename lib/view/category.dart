@@ -1,10 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:notes/controller/controler.dart';
+import 'package:notes/model/color.dart';
 import 'package:notes/model/my_db.dart';
+import 'package:notes/view/notes_page.dart';
 
 Mydb dTb = Mydb();
 final ChipControler controler = Get.put(ChipControler());
@@ -27,20 +30,20 @@ class _CategoryState extends State<Category> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('CATEGORY')),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Obx(() {
-            if (controler.chips.isEmpty) {
-              return Center(
-                child: Text(
-                  "Add Some Categories",
-                  style: TextStyle(fontSize: 25),
-                ),
-              );
-            } else {
-              return Expanded(
-                child: ListView.builder(
+      drawer: buildDrawer(context),
+      body: Card(
+        child: Obx(() {
+          if (controler.chips.isEmpty) {
+            return Center(
+              child: Text(
+                "Add Some Categories",
+                style: TextStyle(fontSize: 25.sp),
+              ),
+            );
+          } else {
+            return Column(
+              children: [
+                ListView.builder(
                   shrinkWrap: true,
                   itemCount: controler.chips.length,
                   itemBuilder: (context, index) {
@@ -56,6 +59,13 @@ class _CategoryState extends State<Category> {
                               );
                               if (result > 0) {
                                 controler.update();
+                                Get.snackbar(
+                                  "",
+                                  "Deleted Succecfully",
+                                  colorText: bcgDark,
+                                  duration: Duration(seconds: 3),
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
 
                                 log(
                                   "Deleted successfully=================================================$result",
@@ -68,34 +78,96 @@ class _CategoryState extends State<Category> {
                             },
                             icon: Icons.delete,
                             label: 'Delete',
-                            backgroundColor: Color.fromARGB(255, 129, 38, 38),
+                            backgroundColor: tow,
                           ),
                         ],
                       ),
-                      // endActionPane: ActionPane(
-                      //   motion: StretchMotion(),
-                      //   children: [
-                      //     SlidableAction(
-                      //       onPressed: (context) {
-                      //         Get.toNamed(
-                      //           '/edit_note',
-                      //           arguments: controler.chips[index],
-                      //         );
-                      //       },
+                      endActionPane: ActionPane(
+                        motion: StretchMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              final TextEditingController categoryController =
+                                  TextEditingController();
+                              categoryController.text =
+                                  "${controler.chips[index].chiplabel}";
+                              Get.dialog(
+                                Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: AlertDialog(
+                                    title: Center(child: Text('Edit Category')),
+                                    content: TextField(
+                                      controller: categoryController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter category name',
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Get.back();
+                                        },
+                                        child: Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          if (categoryController
+                                              .text
+                                              .isNotEmpty) {
+                                            int result = await dTb.updateDB(
+                                              'category',
+                                              {
+                                                "label":
+                                                    categoryController.text,
+                                              },
+                                              "id =${controler.chips[index].chipId}",
+                                            );
+                                            log(
+                                              "added categ----------- $result",
+                                            );
+                                            controler.chips.assignAll([
+                                              ChipModel(
+                                                chiplabel:
+                                                    categoryController.text,
+                                              ),
+                                            ]);
+                                            if (result > 0) {
+                                              controler.readCategoryData();
+                                              Get.snackbar(
+                                                "",
+                                                "Category Updated Succecfully",
+                                                colorText: bcgDark,
+                                                duration: Duration(seconds: 3),
+                                                snackPosition:
+                                                    SnackPosition.BOTTOM,
+                                              );
+                                              Get.back();
+                                            }
+                                          }
+                                        },
+                                        child: Text('Done'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
 
-                      //       icon: Icons.edit,
-                      //       label: 'edit',
-                      //       backgroundColor: Color.fromRGBO(231, 147, 44, 1),
-                      //     ),
-                      // ],
-                      // ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 3),
+                                arguments: controler.chips[index],
+                              );
+                            },
+
+                            icon: Icons.edit,
+                            label: 'edit',
+                            backgroundColor: four,
+                          ),
+                        ],
+                      ),
+                      child: RPadding(
+                        padding: const EdgeInsets.only(top: 1).r,
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: ListTile(
                             title: Text(
-                              " ${controler.chips[index].chiplabel} :",
+                              " ${controler.chips[index].chiplabel} ",
                             ),
                           ),
                         ),
@@ -103,10 +175,10 @@ class _CategoryState extends State<Category> {
                     );
                   },
                 ),
-              );
-            }
-          }),
-        ],
+              ],
+            );
+          }
+        }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -124,38 +196,41 @@ void showAddCategoryDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Add Category'),
-        content: TextField(
-          controller: categoryController,
-          decoration: InputDecoration(hintText: 'Enter category name'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text('Cancel'),
+      return Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: Center(child: Text('Add Category')),
+          content: TextField(
+            controller: categoryController,
+            decoration: InputDecoration(hintText: 'Enter category name'),
           ),
-          TextButton(
-            onPressed: () async {
-              if (categoryController.text.isNotEmpty) {
-                int result = await dTb.inserttoDB('category', {
-                  "label": categoryController.text,
-                });
-                log("added categ----------- $result");
-                controler.chips.assignAll([
-                  ChipModel(chiplabel: categoryController.text),
-                ]);
-                if (result > 0) {
-                  controler.readCategoryData();
-                  Get.back();
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (categoryController.text.isNotEmpty) {
+                  int result = await dTb.inserttoDB('category', {
+                    "label": categoryController.text,
+                  });
+                  log("added categ----------- $result");
+                  controler.chips.assignAll([
+                    ChipModel(chiplabel: categoryController.text),
+                  ]);
+                  if (result > 0) {
+                    controler.readCategoryData();
+                    Get.back();
+                  }
                 }
-              }
-            },
-            child: Text('Add'),
-          ),
-        ],
+              },
+              child: Text('Add'),
+            ),
+          ],
+        ),
       );
     },
   );

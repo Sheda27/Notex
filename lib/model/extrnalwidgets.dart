@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notes/model/color.dart';
 
 //light theme
 ThemeData themeLight() {
   return ThemeData(
     appBarTheme: AppBarTheme(
-      backgroundColor: bcgC,
+      backgroundColor: Colors.grey[800],
       foregroundColor: three,
-      titleTextStyle: TextStyle(color: three, fontSize: 28),
+      titleTextStyle: TextStyle(color: three, fontSize: 28.sp),
+    ),
+    cardTheme: CardThemeData(
+      color: Colors.grey[00],
+      shadowColor: bcgDark,
+      elevation: 5,
+      surfaceTintColor: one,
+      margin: EdgeInsets.fromLTRB(7, 0, 0, 0).r,
     ),
     drawerTheme: DrawerThemeData(backgroundColor: three),
     textTheme: TextTheme(
@@ -16,23 +24,21 @@ ThemeData themeLight() {
       bodySmall: TextStyle(color: one),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: bcgC,
+      backgroundColor: bcgDark,
       labelStyle: TextStyle(color: three),
     ),
-    scaffoldBackgroundColor: three,
-    buttonTheme: ButtonThemeData(buttonColor: secondaryColor),
-    expansionTileTheme: ExpansionTileThemeData(
-      backgroundColor: three.withAlpha(1000),
-      textColor: one,
-      collapsedTextColor: one,
-      collapsedBackgroundColor: three.withAlpha(100),
-      expandedAlignment: Alignment.topRight,
-      childrenPadding: EdgeInsets.only(right: 20),
+    scaffoldBackgroundColor: Colors.grey[800],
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(bcgDark),
+        foregroundColor: WidgetStatePropertyAll(three),
+      ),
     ),
     listTileTheme: ListTileThemeData(
-      tileColor: three.withAlpha(1000),
-      titleTextStyle: TextStyle(color: one, fontSize: 20),
-      subtitleTextStyle: TextStyle(color: one, fontSize: 16),
+      tileColor: bcgDark.withAlpha(100),
+      titleTextStyle: TextStyle(color: bcgDark, fontSize: 20),
+      subtitleTextStyle: TextStyle(color: bcgDark, fontSize: 16),
     ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: one),
@@ -40,7 +46,7 @@ ThemeData themeLight() {
     ),
     hintColor: one,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: bcgC.withAlpha(450),
+      backgroundColor: bcgDark.withAlpha(450),
       foregroundColor: three,
     ),
   );
@@ -50,11 +56,17 @@ ThemeData themeLight() {
 ThemeData themeDark() {
   return ThemeData(
     appBarTheme: AppBarTheme(
-      backgroundColor: bcgC,
-      foregroundColor: textDark,
-      titleTextStyle: TextStyle(color: three, fontSize: 28),
+      backgroundColor: lay,
+      foregroundColor: way,
+      titleTextStyle: TextStyle(color: way, fontSize: 28.sp),
     ),
-
+    cardTheme: CardThemeData(
+      color: way,
+      shadowColor: three,
+      elevation: 5,
+      margin: EdgeInsets.fromLTRB(7, 0, 0, 0).r,
+    ),
+    drawerTheme: DrawerThemeData(backgroundColor: three),
     textTheme: TextTheme(
       titleMedium: TextStyle(color: three),
       bodyMedium: TextStyle(color: three),
@@ -62,19 +74,16 @@ ThemeData themeDark() {
     ),
     chipTheme: ChipThemeData(
       side: BorderSide(width: 0.5, color: three),
-      surfaceTintColor: three,
-      backgroundColor: bcgC,
-      labelStyle: TextStyle(color: three),
+      backgroundColor: lay.withAlpha(100),
+      labelStyle: TextStyle(color: way),
     ),
 
-    drawerTheme: DrawerThemeData(backgroundColor: bcgDark),
-    scaffoldBackgroundColor: one,
-    buttonTheme: ButtonThemeData(buttonColor: secondryDark),
+    scaffoldBackgroundColor: lay,
 
     listTileTheme: ListTileThemeData(
-      tileColor: bcgC.withAlpha(90),
-      titleTextStyle: TextStyle(color: three, fontSize: 20),
-      subtitleTextStyle: TextStyle(color: three, fontSize: 16),
+      tileColor: lay.withAlpha(100),
+      titleTextStyle: TextStyle(color: three, fontSize: 20.sp),
+      subtitleTextStyle: TextStyle(color: three, fontSize: 16.sp),
     ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: three),
@@ -82,7 +91,7 @@ ThemeData themeDark() {
     ),
     hintColor: three,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: bcgC.withAlpha(400),
+      backgroundColor: lay.withAlpha(400),
       foregroundColor: three,
     ),
   );

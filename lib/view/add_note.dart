@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:notes/controller/controler.dart';
 import 'package:notes/model/color.dart';
 import 'package:notes/model/my_db.dart';
-// import 'package:notes/view/category.dart';
 
 class Addnote extends StatefulWidget {
   const Addnote({super.key});
@@ -32,54 +32,91 @@ class _AddnoteState extends State<Addnote> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Add Note")),
-      body: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: TextFormField(
-              controller: title,
-              decoration: InputDecoration(
-                hintText: "Title",
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.all(10),
-              ),
-            ),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: TextFormField(
-              controller: category,
-
-              decoration: InputDecoration(
-                hintText: "category",
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.all(10),
-                suffix: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      showCategoryDialog(context);
-                    });
-                  },
-                  icon: Icon(Icons.arrow_drop_down),
+      body: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(3.0).r,
+              child: SizedBox(
+                height: 20.h,
+                child: Text(
+                  "Title :",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 2, child: Container(color: three)),
-          Expanded(
-            child: TextFormField(
-              maxLines: null,
-              minLines: null,
-              controller: cotent,
-              decoration: InputDecoration(
-                hintText: "Content",
-
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.all(10),
+            Padding(
+              padding: EdgeInsets.all(8.0).r,
+              child: Card(
+                child: TextFormField(
+                  controller: title,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(10),
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.all(3.0).r,
+              child: SizedBox(
+                height: 20.h,
+                child: Text(
+                  "Category :",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0).r,
+              child: Card(
+                child: TextFormField(
+                  controller: category,
+
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(10),
+                    suffix: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showCategoryDialog(context);
+                        });
+                      },
+                      icon: Icon(Icons.arrow_drop_down),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(3.0).r,
+              child: SizedBox(
+                height: 20.h,
+                child: Text(
+                  "Content :",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8.0).r,
+                child: Card(
+                  child: TextFormField(
+                    maxLines: null,
+                    minLines: null,
+                    controller: cotent,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(10),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
@@ -102,7 +139,17 @@ class _AddnoteState extends State<Addnote> {
             cotent.clear();
             category.clear();
 
-            Get.offNamed('/note_page');
+            Get.offNamedUntil(
+              '/note_page',
+              (route) => route.settings.name == '/',
+            );
+            Get.snackbar(
+              "",
+              "Note Added succesfully",
+              colorText: bcgDark,
+              duration: Duration(seconds: 3),
+              snackPosition: SnackPosition.BOTTOM,
+            );
           }
         },
       ),
@@ -115,8 +162,7 @@ void showCategoryDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        // backgroundColor: one.withAlpha(50),
-        title: Text("Select Category" /*style: TextStyle(color: three)*/),
+        title: Text("Select Category"),
         content: SizedBox(
           height: 200,
           child: ListView.builder(
