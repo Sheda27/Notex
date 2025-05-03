@@ -1,16 +1,36 @@
-# notes
+# Notex
 
-A new Flutter project.
+**Notex** is a simple yet powerful Flutter application for taking notes and managing daily tasks (To-Do List). It supports categorization and basic priority handling to help you stay organized and focused.
+
+## Features
+
+- **Create, edit, and delete notes**
+- **Categorize notes** for better organization
+- **Add to-do tasks** with priority levels (High, Low)
+- **Filter to-dos by priority**
+- **Dedicated list for completed tasks**
+- Clean and minimal UI built with Flutter
+
+## Purpose
+
+Notex is a personal project built to sharpen my Flutter development skills. It may be published or open-sourced in the future.
+
+## Screenshots
+
+*Add screenshots of the app here when available*
+
+## Requirements
+
+- Flutter 3.x
+- Dart SDK
+- Supports both Android and iOS
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To run the project locally:
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git clone https://github.com/your-username/notex.git
+cd notex
+flutter pub get
+flutter run
