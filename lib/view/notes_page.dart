@@ -10,6 +10,8 @@ import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:notes/model/color.dart';
 import 'package:notes/controller/controler.dart';
+import 'package:notes/model/my_db.dart';
+import 'package:notes/view/category.dart';
 
 class Notespage extends StatefulWidget {
   const Notespage({super.key});
@@ -20,7 +22,7 @@ class Notespage extends StatefulWidget {
 
 Controler _controler = Get.put(Controler());
 ChipControler _controlerch = Get.put(ChipControler());
-
+Mydb _dTb = Mydb();
 int? selected;
 
 class _NotespageState extends State<Notespage> {
@@ -28,77 +30,100 @@ class _NotespageState extends State<Notespage> {
   void initState() {
     super.initState();
     _controlerch.readCategoryData();
+
     _controler.readData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: buildDrawer(context),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed('/add_note');
-        },
-        child: Icon(Icons.add),
-      ),
+    return RefreshIndicator(
+      onRefresh: () {
+        // _controlerch.readCategoryData();
+        return _controler.readData();
+      },
 
-      appBar: AppBar(title: Text("Notes")),
-      body: RefreshIndicator(
-        onRefresh: () {
-          _controlerch.readCategoryData();
-          return _controler.readData();
-        },
+      child: Scaffold(
+        drawer: buildDrawer(context),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Get.toNamed('/add_note');
+          },
+          child: Icon(Icons.add),
+        ),
 
-        child: Card(
-          child: Obx(() {
-            if (_controler.notes.isEmpty) {
-              return Center(
-                child: Text(
-                  "Add Some Notes",
-                  style: TextStyle(fontSize: 25.sp),
-                ),
-              );
-            } else {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 50.h,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
+        appBar: AppBar(title: Text("Notes")),
+        body: Card(
+          child: Column(
+            children: [
+              Obx(
+                () => SizedBox(
+                  height: 50.h,
+                  width: 0.9.sw,
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
 
-                      itemCount: _controlerch.chips.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 3),
-                          child: GestureDetector(
-                            onTap: () async {
-                              selected = _controlerch.chips[index].chipId;
-                              var result = await dTb.selectFromDbByCategory(
-                                "notes_db",
-                                "category_id= $selected",
+                          itemCount: _controlerch.chips.length,
+                          itemBuilder: (context, index) {
+                            if (_controlerch.chips.isEmpty) {
+                              return Text("");
+                            } else {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 3),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    selected = _controlerch.chips[index].chipId;
+                                    var result = await _dTb
+                                        .selectFromDbByCategory(
+                                          "notes_db",
+                                          "category_id= $selected",
+                                        );
+                                    _controler.filterdNotes = List.generate(
+                                      result.length,
+                                      (i) => NoteModel.fromMap(result[i]),
+                                    );
+                                    setState(() {
+                                      _controler.notes = RxList<NoteModel>.from(
+                                        _controler.filterdNotes,
+                                      );
+                                    });
+                                    log('selected category========= $result');
+                                  },
+                                  child: Chip(
+                                    label: Text(
+                                      '${_controlerch.chips[index].chiplabel}',
+                                    ),
+                                  ),
+                                ),
                               );
-                              _controler.filterdNotes = List.generate(
-                                result.length,
-                                (i) => NoteModel.fromMap(result[i]),
-                              );
-                              setState(() {
-                                _controler.notes = RxList<NoteModel>.from(
-                                  _controler.filterdNotes,
-                                );
-                              });
-                              log('selected category========= $result');
-                            },
-                            child: Chip(
-                              label: Text(
-                                '${_controlerch.chips[index].chiplabel}',
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            }
+                          },
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showAddCategoryDialog(context);
+                        },
+                        child: Chip(label: Icon(Icons.add, color: four)),
+                      ),
+                    ],
                   ),
-                  Flexible(
+                ),
+              ),
+              Obx(() {
+                if (_controler.notes.isEmpty) {
+                  return Flexible(
+                    child: Center(
+                      child: Text(
+                        "Add Some Notes",
+                        style: TextStyle(fontSize: 25.sp),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Flexible(
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: _controler.notes.length,
@@ -110,7 +135,7 @@ class _NotespageState extends State<Notespage> {
                             children: [
                               SlidableAction(
                                 onPressed: (context) async {
-                                  var result = await dTb.deleteFromDB(
+                                  var result = await _dTb.deleteFromDB(
                                     "notes_db",
                                     "id =  ${_controler.notes[index].id} ",
                                   );
@@ -184,11 +209,11 @@ class _NotespageState extends State<Notespage> {
                         );
                       },
                     ),
-                  ),
-                ],
-              );
-            }
-          }),
+                  );
+                }
+              }),
+            ],
+          ),
         ),
       ),
     );

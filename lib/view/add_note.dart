@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:notes/controller/controler.dart';
 import 'package:notes/model/color.dart';
 import 'package:notes/model/my_db.dart';
+import 'package:notes/view/category.dart';
 
 class Addnote extends StatefulWidget {
   const Addnote({super.key});
@@ -73,7 +74,7 @@ class _AddnoteState extends State<Addnote> {
               child: Card(
                 child: TextFormField(
                   controller: category,
-
+                  readOnly: true,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(10),
@@ -83,7 +84,7 @@ class _AddnoteState extends State<Addnote> {
                           showCategoryDialog(context);
                         });
                       },
-                      icon: Icon(Icons.arrow_drop_down),
+                      icon: Icon(Icons.arrow_drop_down, size: 40.r),
                     ),
                   ),
                 ),
@@ -162,37 +163,59 @@ void showCategoryDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("Select Category"),
+        actionsOverflowAlignment: OverflowBarAlignment.end,
+        actionsPadding: EdgeInsets.all(0),
+        title: Text("Select Category", style: TextStyle(color: three)),
         content: SizedBox(
-          height: 200,
-          child: ListView.builder(
-            itemCount: _controlerch.chips.length,
-            itemBuilder: (context, i) {
-              return GestureDetector(
-                onTap: () {
-                  selsectedCategory = _controlerch.chips[i].chipId;
-                  category.text = _controlerch.chips[i].chiplabel.toString();
-                  Get.back();
-                },
-                child: ListTile(
-                  title: Text('${_controlerch.chips[i].chiplabel}'),
-                ),
-              );
-            },
+          height: 200.h,
+          width: 150.w,
+          child: Obx(
+            () => ListView.builder(
+              itemCount: _controlerch.chips.length,
+              itemBuilder: (context, i) {
+                return GestureDetector(
+                  onTap: () {
+                    selsectedCategory = _controlerch.chips[i].chipId;
+                    category.text = _controlerch.chips[i].chiplabel.toString();
+                    Get.back();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(3.0).r,
+                    child: ListTile(
+                      title: Text('${_controlerch.chips[i].chiplabel}'),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text("Cancel"),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              padding: EdgeInsets.all(0),
+              color: bcgDark,
+              child: TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text("Cancel", style: TextStyle(color: three)),
+              ),
+            ),
           ),
-          TextButton(
-            onPressed: () {
-              Get.toNamed('/categ');
-            },
-            child: Text("add category"),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              padding: EdgeInsets.all(0),
+              color: bcgDark,
+              child: TextButton(
+                onPressed: () {
+                  showAddCategoryDialog(context);
+                },
+                child: Text("add category", style: TextStyle(color: three)),
+              ),
+            ),
           ),
         ],
       );

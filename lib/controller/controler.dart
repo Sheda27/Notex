@@ -47,7 +47,7 @@ class Controler extends GetxController {
 
   //notes provider
   Future<List<NoteModel>> readData() async {
-    final result = await dTb.selectFromDB('notes_db');
+    final result = await dTb.selectorderdFromDB('notes_db', 'id DESC');
     final notesList = List.generate(
       result.length,
       (i) => NoteModel.fromMap(result[i]),
@@ -107,7 +107,7 @@ class ToDoCtrl extends GetxController {
 
   //notes provider
   Future<List<ToDo>> readToDosData() async {
-    final result = await dTb.selectFromDB('todos');
+    final result = await dTb.selectorderdFromDB('todos', 'id DESC');
     final todoList = List.generate(
       result.length,
       (i) => ToDo.fromMap(result[i]),

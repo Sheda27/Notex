@@ -196,41 +196,57 @@ void showAddCategoryDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return Directionality(
-        textDirection: TextDirection.rtl,
-        child: AlertDialog(
-          title: Center(child: Text('Add Category')),
-          content: TextField(
-            controller: categoryController,
-            decoration: InputDecoration(hintText: 'Enter category name'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (categoryController.text.isNotEmpty) {
-                  int result = await dTb.inserttoDB('category', {
-                    "label": categoryController.text,
-                  });
-                  log("added categ----------- $result");
-                  controler.chips.assignAll([
-                    ChipModel(chiplabel: categoryController.text),
-                  ]);
-                  if (result > 0) {
-                    controler.readCategoryData();
-                    Get.back();
-                  }
-                }
-              },
-              child: Text('Add'),
-            ),
-          ],
+      return AlertDialog(
+        title: Center(
+          child: Text('Add Category', style: TextStyle(color: three)),
         ),
+        content: TextField(
+          controller: categoryController,
+          decoration: InputDecoration(
+            hintText: 'Enter category name',
+            hintStyle: TextStyle(color: three),
+          ),
+        ),
+        actions: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              padding: EdgeInsets.all(0),
+              color: bcgDark,
+              child: TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text("Cancel", style: TextStyle(color: three)),
+              ),
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              padding: EdgeInsets.all(0),
+              color: bcgDark,
+              child: TextButton(
+                onPressed: () async {
+                  if (categoryController.text.isNotEmpty) {
+                    int result = await dTb.inserttoDB('category', {
+                      "label": categoryController.text,
+                    });
+                    log("added categ----------- $result");
+                    controler.chips.assignAll([
+                      ChipModel(chiplabel: categoryController.text),
+                    ]);
+                    if (result > 0) {
+                      controler.readCategoryData();
+                      Get.back();
+                    }
+                  }
+                },
+                child: Text('Add', style: TextStyle(color: three)),
+              ),
+            ),
+          ),
+        ],
       );
     },
   );

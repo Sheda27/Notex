@@ -6,12 +6,12 @@ import 'package:notes/model/color.dart';
 ThemeData themeLight() {
   return ThemeData(
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.grey[800],
+      backgroundColor: six,
       foregroundColor: three,
       titleTextStyle: TextStyle(color: three, fontSize: 28.sp),
     ),
     cardTheme: CardThemeData(
-      color: Colors.grey[00],
+      color: five,
       shadowColor: bcgDark,
       elevation: 5,
       surfaceTintColor: one,
@@ -26,8 +26,16 @@ ThemeData themeLight() {
     chipTheme: ChipThemeData(
       backgroundColor: bcgDark,
       labelStyle: TextStyle(color: three),
+      shadowColor: bcgDark,
+      elevation: 3,
     ),
-    scaffoldBackgroundColor: Colors.grey[800],
+    dialogTheme: DialogThemeData(
+      backgroundColor: bcgDark.withAlpha(100),
+      contentTextStyle: TextStyle(color: three),
+      shadowColor: three,
+      elevation: 7,
+    ),
+    scaffoldBackgroundColor: six,
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -37,12 +45,13 @@ ThemeData themeLight() {
     ),
     listTileTheme: ListTileThemeData(
       tileColor: bcgDark.withAlpha(100),
-      titleTextStyle: TextStyle(color: bcgDark, fontSize: 20),
-      subtitleTextStyle: TextStyle(color: bcgDark, fontSize: 16),
+      titleTextStyle: TextStyle(color: three, fontSize: 20),
+      subtitleTextStyle: TextStyle(color: three, fontSize: 16),
     ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: one),
       labelStyle: TextStyle(color: one),
+      suffixIconColor: six,
     ),
     hintColor: one,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -55,6 +64,9 @@ ThemeData themeLight() {
 // dark theme
 ThemeData themeDark() {
   return ThemeData(
+    dropdownMenuTheme: DropdownMenuThemeData(
+      menuStyle: MenuStyle(backgroundColor: WidgetStatePropertyAll(three)),
+    ),
     appBarTheme: AppBarTheme(
       backgroundColor: lay,
       foregroundColor: way,
@@ -66,16 +78,24 @@ ThemeData themeDark() {
       elevation: 5,
       margin: EdgeInsets.fromLTRB(7, 0, 0, 0).r,
     ),
-    drawerTheme: DrawerThemeData(backgroundColor: three),
+    drawerTheme: DrawerThemeData(backgroundColor: lay),
     textTheme: TextTheme(
       titleMedium: TextStyle(color: three),
       bodyMedium: TextStyle(color: three),
+      bodyLarge: TextStyle(color: three),
       bodySmall: TextStyle(color: three),
     ),
+
     chipTheme: ChipThemeData(
       side: BorderSide(width: 0.5, color: three),
       backgroundColor: lay.withAlpha(100),
       labelStyle: TextStyle(color: way),
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: bcgDark.withAlpha(100),
+      contentTextStyle: TextStyle(color: three),
+      shadowColor: three,
+      elevation: 7,
     ),
 
     scaffoldBackgroundColor: lay,
@@ -88,6 +108,7 @@ ThemeData themeDark() {
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: three),
       labelStyle: TextStyle(color: three),
+      suffixIconColor: Colors.white,
     ),
     hintColor: three,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
